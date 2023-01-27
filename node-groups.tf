@@ -1,7 +1,7 @@
 # EKS Node Groups
 resource "aws_eks_node_group" "this" {
   cluster_name    = aws_eks_cluster.this.name
-  node_group_name = var.project
+  node_group_name = local.cluster_name
   node_role_arn   = aws_iam_role.node.arn
   subnet_ids      = aws_subnet.private[*].id
 
@@ -31,7 +31,7 @@ resource "aws_eks_node_group" "this" {
 
 # EKS Node IAM Role
 resource "aws_iam_role" "node" {
-  name = "${var.project}-Worker-Role"
+  name = "${local.cluster_name}-Worker-Role"
 
   assume_role_policy = <<POLICY
 {
@@ -67,7 +67,7 @@ resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryReadOn
 
 # EKS Node Security Group
 resource "aws_security_group" "eks_nodes" {
-  name        = "${var.project}-node-sg"
+  name        = "${local.cluster_name}-node-sg"
   description = "Security group for all nodes in the cluster"
   vpc_id      = aws_vpc.this.id
 
@@ -79,7 +79,7 @@ resource "aws_security_group" "eks_nodes" {
   }
 
   tags = {
-    Name                                           = "${var.project}-node-sg"
+    Name                                           = "${local.cluster_name}-node-sg"
     "kubernetes.io/cluster/${var.project}-cluster" = null
   }
 }

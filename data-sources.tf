@@ -7,4 +7,7 @@ data "kubernetes_service" "service_ingress" {
     name      = "istio-ingressgateway"
     namespace = "istio-system"
   }
+  depends_on = [
+    helm_release.istio_ingress
+  ]
 }

@@ -4,7 +4,7 @@
 region                   = "ap-south-1"
 availability_zones_count = 3
 
-project = "EKS"
+project = "Zeblok"
 
 vpc_cidr         = "192.168.0.0/16"
 subnet_cidr_bits = 8

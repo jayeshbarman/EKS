@@ -1,3 +1,8 @@
+resource "random_string" "suffix" {
+  length  = 8
+  special = false
+}
+
 resource "kubernetes_namespace" "istio_system" {
   metadata {
     name = "istio-system"

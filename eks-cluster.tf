@@ -1,6 +1,6 @@
 # EKS Cluster
 resource "aws_eks_cluster" "this" {
-  name     = "${var.project}-cluster"
+  name     = local.cluster_name
   role_arn = aws_iam_role.cluster.arn
   version  = "1.21"
 
@@ -24,7 +24,7 @@ resource "aws_eks_cluster" "this" {
 
 # EKS Cluster IAM Role
 resource "aws_iam_role" "cluster" {
-  name = "${var.project}-Cluster-Role"
+  name = "${local.cluster_name}-Cluster-Role"
 
   assume_role_policy = <<POLICY
 {
@@ -50,12 +50,12 @@ resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSClusterPolicy" {
 
 # EKS Cluster Security Group
 resource "aws_security_group" "eks_cluster" {
-  name        = "${var.project}-cluster-sg"
+  name        = "${local.cluster_name}-cluster-sg"
   description = "Cluster communication with worker nodes"
   vpc_id      = aws_vpc.this.id
 
   tags = {
-    Name = "${var.project}-cluster-sg"
+    Name = "${local.cluster_name}-cluster-sg"
   }
 }
 

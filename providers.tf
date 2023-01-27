@@ -43,3 +43,6 @@ provider "aws" {
   # other options for authentication
 }
 
+locals {
+  cluster_name = "${var.project}-${random_string.suffix.result}"
+}

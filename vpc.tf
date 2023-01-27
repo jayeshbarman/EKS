@@ -6,8 +6,8 @@ resource "aws_vpc" "this" {
   enable_dns_support   = true
 
   tags = {
-    Name                                           = "${var.project}-vpc",
-    "kubernetes.io/cluster/${var.project}-cluster" = "shared"
+    Name                                           = "${local.cluster_name}-vpc",
+    "kubernetes.io/cluster/${local.cluster_name}-cluster" = "shared"
   }
 }
 
@@ -20,8 +20,8 @@ resource "aws_subnet" "public" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = {
-    Name                                           = "${var.project}-public-sg"
-    "kubernetes.io/cluster/${var.project}-cluster" = "shared"
+    Name                                           = "${local.cluster_name}-public-sg"
+    "kubernetes.io/cluster/${local.cluster_name}-cluster" = "shared"
     "kubernetes.io/role/elb"                       = 1
   }
 
@@ -37,8 +37,8 @@ resource "aws_subnet" "private" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = {
-    Name                                           = "${var.project}-private-sg"
-    "kubernetes.io/cluster/${var.project}-cluster" = "shared"
+    Name                                           = "${local.cluster_name}-private-sg"
+    "kubernetes.io/cluster/${local.cluster_name}-cluster" = "shared"
     "kubernetes.io/role/internal-elb"              = 1
   }
 }
@@ -48,7 +48,7 @@ resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
 
   tags = {
-    "Name" = "${var.project}-igw"
+    "Name" = "${local.cluster_name}-igw"
   }
 
   depends_on = [aws_vpc.this]
@@ -65,7 +65,7 @@ resource "aws_route_table" "main" {
   }
 
   tags = {
-    Name = "${var.project}-Default-rt"
+    Name = "${local.cluster_name}-Default-rt"
   }
 }
 
@@ -82,7 +82,7 @@ resource "aws_eip" "main" {
   vpc = true
 
   tags = {
-    Name = "${var.project}-ngw-ip"
+    Name = "${local.cluster_name}-ngw-ip"
   }
 }
 
@@ -92,7 +92,7 @@ resource "aws_nat_gateway" "main" {
   subnet_id     = aws_subnet.public[0].id
 
   tags = {
-    Name = "${var.project}-ngw"
+    Name = "${local.cluster_name}-ngw"
   }
 }
 
@@ -105,11 +105,11 @@ resource "aws_route" "main" {
 
 # Security group for public subnet
 resource "aws_security_group" "public_sg" {
-  name   = "${var.project}-Public-sg"
+  name   = "${local.cluster_name}-Public-sg"
   vpc_id = aws_vpc.this.id
 
   tags = {
-    Name = "${var.project}-Public-sg"
+    Name = "${local.cluster_name}-Public-sg"
   }
 }
 
@@ -143,11 +143,11 @@ resource "aws_security_group_rule" "sg_egress_public" {
 
 # Security group for data plane
 resource "aws_security_group" "data_plane_sg" {
-  name   = "${var.project}-Worker-sg"
+  name   = "${local.cluster_name}-Worker-sg"
   vpc_id = aws_vpc.this.id
 
   tags = {
-    Name = "${var.project}-Worker-sg"
+    Name = "${local.cluster_name}-Worker-sg"
   }
 }
 
@@ -184,11 +184,11 @@ resource "aws_security_group_rule" "node_outbound" {
 
 # Security group for control plane
 resource "aws_security_group" "control_plane_sg" {
-  name   = "${var.project}-ControlPlane-sg"
+  name   = "${local.cluster_name}-ControlPlane-sg"
   vpc_id = aws_vpc.this.id
 
   tags = {
-    Name = "${var.project}-ControlPlane-sg"
+    Name = "${local.cluster_name}-ControlPlane-sg"
   }
 }
 
