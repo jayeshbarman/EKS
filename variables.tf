@@ -44,6 +44,6 @@ variable "tags" {
   default = {
     "Project"     = "EKS"
     "Environment" = "Development"
-    "Owner"       = "Zeblok"
+    "Owner"       = "Jayesh"
   }
 }
