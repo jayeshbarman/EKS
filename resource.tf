@@ -19,7 +19,7 @@ resource "helm_release" "istio_base" {
   
   depends_on = [ aws_eks_node_group.this, kubernetes_namespace.istio_system ]
 }
-
+# Sometimes istiod gives error then upgrade it's version cross check istio-ingree version and add 2 in that and use that version in istiod
 resource "helm_release" "istiod" {
   name  = "istiod"
   repository = "https://istio-release.storage.googleapis.com/charts"
@@ -40,7 +40,7 @@ resource "helm_release" "istiod" {
 resource "helm_release" "istio_ingress" {
   name  = "istio-ingress"
   #repository = "https://istio-release.storage.googleapis.com/charts"
-  chart = "./istio-ingress/"
+  chart = "./istio-ingress/"  
   #cleanup_on_fail = true
   #force_update    = false
   namespace       = kubernetes_namespace.istio_system.metadata.0.name
